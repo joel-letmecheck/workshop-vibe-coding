@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Vibe Coding Without Getting Burned</title>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Vibe Coding Without Getting Burned</title>
 <style>
 @font-face{font-family:'Bricolage Grotesque';src:url('assets/fonts/BricolageGrotesque-Variable.ttf') format('truetype');font-weight:200 800;font-style:normal;font-display:block}
 @font-face{font-family:'DM Sans';src:url('assets/fonts/DMSans-Variable.ttf') format('truetype');font-weight:100 1000;font-style:normal;font-display:block}
@@ -209,7 +209,25 @@ h2{font-size:76px;line-height:1.0;margin:24px 0 32px}
 .why{font-size:23px;color:var(--yellow);margin-top:10px;font-style:normal!important;opacity:.95}
 .rules{position:absolute;background:var(--brown);color:var(--cream);border-radius:28px;padding:26px 32px;font:400 23px/1.45 'DM Mono',ui-monospace,monospace}
 .fx .fix{top:80px!important}.fx h2{font-size:68px;margin:20px 0 22px}.fx .card{padding:20px 28px;margin-bottom:16px}.st .sc{min-height:0!important;padding:22px 24px!important}.st .sc p{font-size:24px!important}.sp .side li{font-size:32px!important;margin-bottom:24px!important}.cl .tc p{font-size:30px!important}.tk{position:absolute;left:80px;top:270px;width:1180px;height:760px;background:var(--cream);border:6px solid var(--brown);border-radius:30px;box-shadow:12px 12px 0 var(--brown);padding:34px 36px;display:grid;grid-template-columns:1fr 1fr;gap:0 30px;align-content:start}.tk .it{display:flex;gap:16px;margin-bottom:40px}.tk .bx{flex:none;width:42px;height:42px;border:5px solid var(--brown);border-radius:10px;background:#fff}.tk h3{font-size:31px;line-height:1.1;margin-bottom:4px}.tk p{font-size:24px;color:var(--red);font-weight:500}.tm{font-weight:700;color:var(--yellow)}.rules b{color:var(--yellow);font:800 28px 'Bricolage Grotesque';display:block;margin-bottom:8px}
-</style></head><body><div class="stage">
+
+/* on-screen controls (mobile + desktop) */
+html,body{overscroll-behavior:none;width:100%}
+.frame{position:fixed;inset:0;overflow:hidden}
+.navbtn{position:fixed;top:50%;transform:translateY(-50%);z-index:30;width:56px;height:56px;border-radius:50%;border:3px solid var(--cream);background:var(--brown);color:var(--cream);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:.6;transition:opacity .3s,transform .15s;padding:0;-webkit-tap-highlight-color:transparent;box-shadow:4px 4px 0 var(--orange)}
+.navbtn svg{width:26px;height:26px}
+.navbtn.prev{left:12px}.navbtn.next{right:12px}
+.navbtn:hover,.navbtn:focus-visible{opacity:1}.navbtn:active{transform:translateY(-50%) scale(.94)}
+.navbtn:disabled,.navbtn:disabled:hover{opacity:.18;cursor:default;box-shadow:none}
+.notesbtn{position:fixed;left:12px;bottom:12px;z-index:30;min-width:44px;height:44px;border-radius:22px;border:2px solid var(--cream);background:var(--brown);color:var(--cream);font:700 15px 'DM Sans',sans-serif;padding:0 14px;cursor:pointer;opacity:.6;transition:opacity .3s;-webkit-tap-highlight-color:transparent}
+.notesbtn:hover,.notesbtn:focus-visible,.notes-on .notesbtn{opacity:1}
+.notes-on .notesbtn{background:var(--orange)}
+@media (hover:hover) and (pointer:fine){body.idle .navbtn,body.idle .notesbtn{opacity:0;pointer-events:none}}
+.counter{position:fixed}
+.notes-on .slide.active .notes{display:none!important}
+#notesPanel{display:none;position:fixed;left:0;right:0;bottom:0;max-height:46%;overflow:auto;-webkit-overflow-scrolling:touch;background:#1a0d05ee;color:#fff4e2;font:400 clamp(14px,1.4vw,26px)/1.4 'DM Sans',sans-serif;padding:clamp(12px,1.5vw,28px) clamp(16px,3vw,60px) clamp(60px,4vw,72px);z-index:25}
+.notes-on #notesPanel{display:block}
+#notesPanel .tm{color:var(--yellow);font-weight:700}
+</style></head><body><div class="frame"><div class="stage">
 <section class="slide t">
   <div class="blob1"></div><div class="blob2"></div>
   <div class="sticker" style="top:40px;right:60px">Live<br>demo<br>inside</div>
@@ -237,12 +255,12 @@ h2{font-size:76px;line-height:1.0;margin:24px 0 32px}
 <section class="slide pr">
   <div class="num">02 · YOUR NEW JOB</div>
   <div class="col"><span class="kicker">COPY &amp; PASTE</span><h2 style="font-size:70px">You're the tech lead. The AI is your junior.</h2></div>
-  <figure class="mimg " style="left:80px;top:440px;width:660px;height:580px"><img src="assets/memes/kym-pls-fix-cursor-desert.png" alt="A crawling desert traveler turns left toward a sign 21 miles away: &quot;Telling &#x27;pls fix&#x27; to Cursor again.&quot; A much closer sign 1/4 mile to the right reads: &quot;Understand how things actually works.&quot;"><figcaption>Meme: Know Your Meme · <a href="https://knowyourmeme.com/photos/3029677-vibe-coding">knowyourmeme.com/photos/3029677-vibe-coding</a></figcaption></figure>
+  <figure class="mimg " style="left:85px;top:395px;width:650px;height:655px;transform:rotate(-1.5deg)"><img src="assets/memes/iamsweatingalready.jpg" alt="vibe coders be like: four panels of warming up (hands stretching, neck stretch, a lunge), then a prompt box that reads &#x27;+ Make no mistakes&#x27;."><figcaption>Meme: r/ProgrammerHumor, iAmSweatingAlready</figcaption></figure>
   <div class="list">
     <div class="pc"><div class="n">1</div><span class="copy">COPY</span><h3>Strangers</h3><p>"What could a stranger do with this app that they shouldn't be able to? Rank each by how bad it is, and fix the worst first."</p><p class="why">Catches: free access to paid features, other people's accounts.</p></div>
     <div class="pc"><div class="n">2</div><span class="copy">COPY</span><h3>Customer data</h3><p>"List every place this app stores or shows customer data, and who can see it. Flag anything visible without logging in."</p><p class="why">Catches: the Tea-style leak from the last slide.</p></div>
     <div class="pc"><div class="n">3</div><span class="copy">COPY</span><h3>Load &amp; abuse</h3><p>"What would break if 1,000 people used this at once, or one person hit it 10,000 times? What would it cost us?"</p><p class="why">Catches: launch-day crashes and surprise AI or hosting bills.</p></div>
-  </div><aside class="notes"><span class="tm">⏱ 1:30</span> A junior developer is fast and eager, but never asks 'should we?'. That is your job now. You don't need to read code; you need to ask the questions a tech lead asks. Paste these three into Lovable, Bolt, Replit, Cursor or Claude after every big feature. Ask for the answer in plain English and ranked by risk. The meme: telling the AI 'pls fix' again is 21 miles away; understanding how things work is a quarter mile. These prompts are that quarter mile. All three are in cheatsheet.md in the repo. Meme: https://knowyourmeme.com/photos/3029677-vibe-coding</aside></section>
+  </div><aside class="notes"><span class="tm">⏱ 1:30</span> A junior developer is fast and eager, but never asks 'should we?'. That is your job now. You don't need to read code; you need to ask the questions a tech lead asks. Paste these three into Lovable, Bolt, Replit, Cursor or Claude after every big feature. Ask for the answer in plain English and ranked by risk. All three are in cheatsheet.md in the repo. The meme: vibe coders warm up like athletes, then type 'make no mistakes' and call it done. Typing 'make no mistakes' is not a review process; asking these three questions is. Meme: r/ProgrammerHumor, iAmSweatingAlready.</aside></section>
 
 <section class="slide st">
   <div class="num">03 · BEFORE YOU BUILD</div>
@@ -320,9 +338,10 @@ h2{font-size:76px;line-height:1.0;margin:24px 0 32px}
 <section class="slide sp">
   <div class="num">10 · KNOW YOUR LIMIT</div>
   <div class="col" style="width:1320px"><span class="kicker">DECISION</span><h2>Keep vibing, or call a developer?</h2></div>
-  <figure class="mimg " style="right:80px;top:200px;width:430px;height:680px;transform:rotate(2deg)"><img src="assets/memes/ph-handbook-learn-programming.jpg" alt="O RLY? book-cover parody with a ram: &quot;Complete guide for vibe-coders to learn programming without AI.&quot; Title: &quot;Learn Programming like a professional.&quot; Subtitle: &quot;Hand holding references.&quot; Author: @aut"><figcaption>Meme: ProgrammerHumor.io · <a href="https://programmerhumor.io/ai-memes/handbook-after-bubble-burst-fui5">programmerhumor.io/ai-memes/handbook-after-bubble-burst-fui5</a></figcaption></figure>
-  <div class="side keep" style="top:290px;width:640px;height:700px"><h3>Keep vibing</h3><ul style="font-size:34px"><li>Prototypes and internal tools</li><li>Landing pages and waitlists</li><li>No payments, no personal data</li><li>You could rebuild it in a weekend</li><li>Demos and pitch mock-ups</li></ul></div>
-  <div class="side call" style="top:290px;left:750px;width:640px;height:700px"><h3>Call a developer</h3><ul><li>You take payments or store IDs or health data</li><li>Customers depend on it every day</li><li>The AI goes in circles on the same bug</li><li>An investor or client asks "is it secure?"</li></ul><p style="font-size:24px;margin-top:10px;color:var(--yellow)">Tip: a security report gives the developer a fixed list, so you get a fixed quote.</p></div><aside class="notes"><span class="tm">⏱ 1:00</span> Vibe coding is great for anything you could throw away. Once money, identity documents, health data or daily customers are involved, get a human to review. Signals you've outgrown it: the AI keeps 'fixing' the same bug, or someone with money on the line asks if it's secure. A report (for example from LetMeCheck, which can share it with a vetted developer for a fixed quote, per letmecheck.ai) turns 'help, is it safe?' into a priced job. Meme: https://programmerhumor.io/ai-memes/handbook-after-bubble-burst-fui5</aside></section>
+  <figure class="mimg " style="right:70px;top:330px;width:500px;height:440px;transform:rotate(2deg)"><img src="assets/memes/vibecodingisthenewgambling-joel.jpg" alt="Billboard of a boy in black and white: &#x27;Dad, stop vibe-coding&#x27; (parody of a gambling-addiction ad)."><figcaption>Meme: my post on r/ProgrammerHumor · u/joel-letmecheckai, vibeCodingIsTheNewGambling</figcaption></figure>
+  <div class="postbadge" style="right:60px;top:815px"><b>My post on r/ProgrammerHumor</b><span>7.6K upvotes</span></div>
+  <div class="side keep" style="top:290px;width:600px;height:700px"><h3>Keep vibing</h3><ul style="font-size:34px"><li>Prototypes and internal tools</li><li>Landing pages and waitlists</li><li>No payments, no personal data</li><li>You could rebuild it in a weekend</li><li>Demos and pitch mock-ups</li></ul></div>
+  <div class="side call" style="top:290px;left:710px;width:600px;height:700px"><h3>Call a developer</h3><ul><li>You take payments or store IDs or health data</li><li>Customers depend on it every day</li><li>The AI goes in circles on the same bug</li><li>An investor or client asks "is it secure?"</li></ul><p style="font-size:24px;margin-top:10px;color:var(--yellow)">Tip: a security report gives the developer a fixed list, so you get a fixed quote.</p></div><aside class="notes"><span class="tm">⏱ 1:00</span> Vibe coding is great for anything you could throw away. Once money, identity documents, health data or daily customers are involved, get a human to review. Signals you've outgrown it: the AI keeps 'fixing' the same bug, or someone with money on the line asks if it's secure. A report (for example from LetMeCheck, which can share it with a vetted developer for a fixed quote, per letmecheck.ai) turns 'help, is it safe?' into a priced job. The meme is my post on r/ProgrammerHumor: 'Dad, stop vibe-coding', a parody of a gambling-addiction billboard. If you keep pulling the prompt lever hoping this time it works, that's your cue to call a developer. Meme: my post (u/joel-letmecheckai), vibeCodingIsTheNewGambling.</aside></section>
 
 <section class="slide cs">
   <div class="blob"></div>
@@ -345,20 +364,46 @@ h2{font-size:76px;line-height:1.0;margin:24px 0 32px}
     <div class="tc" style="height:470px"><div class="n">3</div><h3>Run a free quick check</h3><p>letmecheck.ai, about a minute, no account. Paste the fix prompts back.</p></div>
   </div>
   <div class="qa" style="top:900px">Q&amp;A</div><div class="by" style="top:915px;left:330px;line-height:1.35">Joel · LetMeCheck · letmecheck.ai<br><span style="font-size:24px;font-weight:500">demo: letmecheckdemo.netlify.app</span></div><aside class="notes"><span class="tm">⏱ 0:45 + Q&A</span> Three things this week: rules note, the three review prompts, a free quick check. Then open Q&A with: 'No question is too basic, that's what the meme is about.' The meme: 'Is my app secure?' is the question everyone is too afraid to ask; the quick check is a one-minute way to ask it. Links: https://letmecheck.ai · https://letmecheckdemo.netlify.app/ · https://github.com/joel-letmecheck/workshop-vibe-coding. Meme: https://knowyourmeme.com/photos/3029691-vibe-coding</aside></section>
-</div><div class="counter"></div>
+</div></div><div class="counter"></div>
+<button class="navbtn prev" type="button" aria-label="Previous slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><button class="navbtn next" type="button" aria-label="Next slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button><button class="notesbtn" type="button" aria-label="Show or hide speaker notes" aria-pressed="false">Notes</button><div id="notesPanel" aria-live="polite"></div>
 <script>
 (function(){
   const slides=[...document.querySelectorAll('.slide')];
-  let i=Math.max(0,Math.min(slides.length-1,(parseInt(location.hash.slice(1))||1)-1));
+  const stage=document.querySelector('.stage'), counter=document.querySelector('.counter');
+  const prev=document.querySelector('.navbtn.prev'), next=document.querySelector('.navbtn.next');
+  const panel=document.getElementById('notesPanel'), nbtn=document.querySelector('.notesbtn');
+  const clamp=n=>Math.max(0,Math.min(slides.length-1,n));
+  let i=clamp((parseInt(location.hash.slice(1))||1)-1);
   function show(){slides.forEach((s,k)=>s.classList.toggle('active',k===i));history.replaceState(null,'','#'+(i+1));
-    const c=document.querySelector('.counter'); if(c) c.textContent=(i+1)+' / '+slides.length;}
-  function fit(){const s=Math.min(innerWidth/1920,innerHeight/1080);
-    document.querySelector('.stage').style.transform='translate(-50%,-50%) scale('+s+')';}
-  addEventListener('keydown',e=>{if(['ArrowRight','PageDown',' '].includes(e.key)){i=Math.min(slides.length-1,i+1);show();}
-    if(['ArrowLeft','PageUp'].includes(e.key)){i=Math.max(0,i-1);show();}
-    if(e.key==='n'||e.key==='N'){document.body.classList.toggle('notes-on');} if(e.key==='Home'){i=0;show();} if(e.key==='End'){i=slides.length-1;show();}});
-  addEventListener('hashchange',()=>{i=Math.max(0,Math.min(slides.length-1,(parseInt(location.hash.slice(1))||1)-1));show();});
-  addEventListener('resize',fit);fit();show();
+    counter.textContent=(i+1)+' / '+slides.length; prev.disabled=i===0; next.disabled=i===slides.length-1;
+    const n=slides[i].querySelector('.notes'); panel.innerHTML=n?n.innerHTML:''; panel.scrollTop=0;}
+  function go(d){const j=clamp(i+d); if(j!==i){i=j;show();}}
+  function toggleNotes(){const on=document.body.classList.toggle('notes-on'); nbtn.setAttribute('aria-pressed',on);}
+  function fit(){const W=innerWidth,H=innerHeight,s=Math.min(W/1920,H/1080);
+    stage.style.transform='translate(-50%,-50%) scale('+s+')';
+    const ox=(W-1920*s)/2, oy=(H-1080*s)/2;
+    counter.style.right=(ox+40*s)+'px'; counter.style.bottom=(oy+24*s)+'px'; counter.style.fontSize=Math.max(11,18*s)+'px';
+    const tall=oy>=150, below=oy+1080*s;  /* portrait phone: controls and notes go in the space under the slide */
+    [prev,next].forEach(btn=>btn.style.top=tall?(below+44)+'px':'50%');
+    panel.style.top=tall?(below+88)+'px':''; panel.style.maxHeight=tall?'none':'';}
+  prev.addEventListener('click',()=>{go(-1);prev.blur();});
+  next.addEventListener('click',()=>{go(1);next.blur();});
+  nbtn.addEventListener('click',()=>{toggleNotes();nbtn.blur();});
+  addEventListener('keydown',e=>{
+    if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();go(1);}
+    else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(-1);}
+    else if(e.key==='n'||e.key==='N'){toggleNotes();}
+    else if(e.key==='Home'){i=0;show();} else if(e.key==='End'){i=slides.length-1;show();}});
+  let x0=null,y0=0;
+  addEventListener('touchstart',e=>{if(e.touches.length!==1||e.target.closest('#notesPanel')){x0=null;return;} x0=e.touches[0].clientX;y0=e.touches[0].clientY;},{passive:true});
+  addEventListener('touchend',e=>{if(x0===null)return; const t=e.changedTouches[0],dx=t.clientX-x0,dy=t.clientY-y0; x0=null;
+    if(Math.abs(dx)>=50&&Math.abs(dx)>Math.abs(dy)*1.5) go(dx<0?1:-1);},{passive:true});
+  const fine=matchMedia('(hover:hover) and (pointer:fine)'); let idle, touched=false;
+  function wake(){document.body.classList.remove('idle');clearTimeout(idle); if(fine.matches&&!touched) idle=setTimeout(()=>document.body.classList.add('idle'),2000);}
+  addEventListener('touchstart',()=>{touched=true;document.body.classList.remove('idle');clearTimeout(idle);},{passive:true,capture:true});
+  addEventListener('mousemove',wake); wake();
+  addEventListener('hashchange',()=>{i=clamp((parseInt(location.hash.slice(1))||1)-1);show();});
+  addEventListener('resize',fit); addEventListener('orientationchange',()=>setTimeout(fit,200)); fit(); show();
 })();
 </script>
 </body></html>

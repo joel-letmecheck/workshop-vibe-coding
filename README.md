@@ -27,13 +27,13 @@ To open one slide directly, add its number to the address, for example `index.ht
 
 ## Meme credits
 
-The memes belong to their creators. They are shown here for comment and teaching. Four are cropped.
+The memes belong to their creators. They are shown here for comment and teaching. Six are cropped.
 
 | Slide | Meme | Source |
 |---|---|---|
 | 1 | "goodVibesOnly": vibe coders asked about security, observability, concurrency, data loss and a public database (Big Ed). Posted by the presenter, u/joel-letmecheckai, on r/ProgrammerHumor (cropped screenshot) | https://www.reddit.com/r/ProgrammerHumor/comments/1wv1ppx/goodvibesonly/ |
 | 2 | "Built with Cursor" / "I'm under attack" (cropped) | https://knowyourmeme.com/photos/3029680-vibe-coding |
-| 3 | "Pls fix" in the desert | https://knowyourmeme.com/photos/3029677-vibe-coding |
+| 3 | "vibe coders be like": warm-up stretches, then "+ Make no mistakes" (cropped screenshot) | r/ProgrammerHumor, "iAmSweatingAlready" (post link not available) |
 | 4 | +93 / −38,918 pull request (cropped) | https://knowyourmeme.com/photos/3029674-vibe-coding |
 | 5 | "You don't need environment variables" | https://programmerhumor.io/security-memes/how-to-get-fired-in-one-easy-step-u4fu |
 | 6 | Deploy on Friday (bicycle) | https://programmerhumor.io/devops-memes/deploy-on-friday-because-why-not-dlwe |
@@ -41,7 +41,7 @@ The memes belong to their creators. They are shown here for comment and teaching
 | 8 | Vibe-coded app security | https://programmerhumor.io/security-memes/vibe-coded-app-security-7xm4 |
 | 9 | "It was only two lines" | https://programmerhumor.io/debugging-memes/it-was-only-two-lines-0rxq |
 | 10 | Replit deletes the database (cropped) | https://programmerhumor.io/ai-memes/replit-ai-went-rogue-the-database-massacre-of-426-am-iq52 |
-| 11 | "Learn Programming like a professional" handbook | https://programmerhumor.io/ai-memes/handbook-after-bubble-burst-fui5 |
+| 11 | "Dad, stop vibe-coding" billboard. Posted by the presenter, u/joel-letmecheckai, on r/ProgrammerHumor (cropped screenshot) | r/ProgrammerHumor, "vibeCodingIsTheNewGambling" (post link not available) |
 | 12 | "Deploy First, Pray Later" | https://programmerhumor.io/devops-memes/friday-deploy-vibes-d030 |
 | 13 | "Too afraid to ask" | https://knowyourmeme.com/photos/3029691-vibe-coding |
 
