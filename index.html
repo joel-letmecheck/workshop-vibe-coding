@@ -1,0 +1,364 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Vibe Coding Without Getting Burned</title>
+<style>
+@font-face{font-family:'Bricolage Grotesque';src:url('assets/fonts/BricolageGrotesque-Variable.ttf') format('truetype');font-weight:200 800;font-style:normal;font-display:block}
+@font-face{font-family:'DM Sans';src:url('assets/fonts/DMSans-Variable.ttf') format('truetype');font-weight:100 1000;font-style:normal;font-display:block}
+@font-face{font-family:'DM Sans';src:url('assets/fonts/DMSans-Italic-Variable.ttf') format('truetype');font-weight:100 1000;font-style:italic;font-display:block}
+:root{--orange:#FF5A1F;--cream:#FFF4E2;--sand:#FFE3BF;--brown:#3B1F0E;--yellow:#FFC233;--green:#1FA463;--red:#E5322D;--pink:#FFD9CC;--mint:#D6F5E3}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#1a0d05;overflow:hidden}
+.stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:center}
+.slide{position:absolute;inset:0;display:none;font-family:'DM Sans',sans-serif;color:var(--brown);overflow:hidden;background:var(--cream)}
+.slide.active{display:block}
+h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;letter-spacing:-0.02em}
+.abs{position:absolute}
+/* shared parts */
+.num{position:absolute;left:80px;top:50px;font-weight:700;font-size:26px;color:var(--orange);letter-spacing:.08em}
+.kicker{display:inline-block;background:var(--orange);color:#fff;font-weight:700;font-size:28px;padding:10px 26px;border-radius:30px;letter-spacing:.06em}
+.kicker.dk{background:var(--brown);color:var(--yellow)}
+h2{font-size:76px;line-height:1.0;margin:24px 0 32px}
+.credit{position:absolute;font-size:20px;color:#8a6a55}
+.card{display:flex;gap:24px;align-items:flex-start;background:var(--sand);border-radius:28px;padding:26px 32px;margin-bottom:20px}
+.card .ic{flex:none;width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:34px;background:var(--brown);color:#fff}
+.card h3{font-size:30px;margin-bottom:6px}
+.card p{font-size:28px;line-height:1.3}
+.card.prompt{background:var(--brown);color:var(--cream)}
+.card.prompt .ic{background:var(--yellow);color:var(--brown)}
+.card.prompt p{font-style:italic}
+/* meme card: two-panel, sized by its box */
+.meme{position:absolute;background:#fff;border:6px solid var(--brown);border-radius:36px;overflow:hidden;box-shadow:16px 16px 0 var(--brown);display:flex;flex-direction:column}
+.meme .row{display:flex;flex:1;border-bottom:6px solid var(--brown)}
+.meme .row:last-child{border-bottom:none}
+.meme .pic{width:42%;display:flex;align-items:center;justify-content:center;font-size:170px}
+.meme .row.no .pic{background:var(--pink)}.meme .row.yes .pic{background:var(--mint)}
+.meme .cap{width:58%;display:flex;align-items:center;padding:0 36px;font-family:'Bricolage Grotesque';font-weight:700;font-size:50px;line-height:1.08;border-left:6px solid var(--brown)}
+.meme.sm .pic{font-size:96px}.meme.sm .cap{font-size:32px;padding:0 24px}
+.meme.md .pic{font-size:130px}.meme.md .cap{font-size:40px;padding:0 28px}
+.meme.side{flex-direction:row}.meme.side .row{flex-direction:column;border-bottom:none;border-right:6px solid var(--brown)}
+.meme.side .row:last-child{border-right:none}.meme.side .pic{width:100%;height:55%}.meme.side .cap{width:100%;height:45%;border-left:none;border-top:6px solid var(--brown);justify-content:center;text-align:center}
+.counter{position:absolute;right:40px;bottom:24px;font:600 18px 'DM Sans';color:#3B1F0E80;z-index:9}
+
+/* L-title */
+.t{background:var(--orange)}
+.t .blob1{position:absolute;right:-180px;top:-200px;width:900px;height:900px;border-radius:50%;background:var(--yellow)}
+.t .blob2{position:absolute;right:420px;bottom:-300px;width:560px;height:560px;border-radius:50%;background:var(--cream)}
+.t .tag{position:absolute;left:120px;top:110px;background:var(--brown);color:var(--cream);font-weight:700;font-size:30px;padding:14px 30px;border-radius:40px}
+.t h1{position:absolute;left:120px;top:220px;width:1100px;font-size:140px;line-height:.95;color:var(--cream)}
+.t h1 span{color:var(--brown)}
+.t .sub{position:absolute;left:120px;top:770px;width:1000px;font-size:44px;line-height:1.25;font-weight:500}
+.t .by{position:absolute;left:120px;bottom:80px;font-size:28px;font-weight:700;color:var(--cream)}
+.t .meme{right:130px;top:250px;width:560px;height:600px;transform:rotate(4deg)}
+.t .sticker{position:absolute;right:80px;top:110px;z-index:3;background:var(--brown);color:var(--yellow);font-family:'Bricolage Grotesque';font-weight:800;font-size:36px;width:210px;height:210px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1;transform:rotate(12deg)}
+
+/* L-fix */
+.fx .meme{left:80px;top:110px;width:780px;height:890px}
+.fx .fix{position:absolute;left:940px;top:110px;width:900px}
+
+/* L-stat (meme right) */
+.stt .meme{right:96px;top:110px;width:720px;height:860px}
+.stt .col{position:absolute;left:80px;top:110px;width:960px}
+.stt .big{font-family:'Bricolage Grotesque';font-weight:800;font-size:220px;line-height:.9;color:var(--orange);letter-spacing:-.04em}
+.stt .biglab{font-size:34px;font-weight:700;margin:8px 0 30px}
+.stt .src{font-size:22px;color:#8a6a55;margin-top:-8px}
+
+/* L-prompts */
+.pr{background:var(--sand)}
+.pr .col{position:absolute;left:80px;top:110px;width:660px}
+.pr .meme{left:80px;top:520px;width:640px;height:460px}
+.pr .list{position:absolute;left:820px;top:110px;width:1020px}
+.pr .pc{background:var(--brown);color:var(--cream);border-radius:28px;padding:30px 36px 30px 130px;margin-bottom:26px;position:relative;min-height:262px}
+.pr .pc .n{position:absolute;left:32px;top:30px;width:72px;height:72px;border-radius:50%;background:var(--yellow);color:var(--brown);font:800 40px 'Bricolage Grotesque';display:flex;align-items:center;justify-content:center}
+.pr .pc h3{font-size:34px;color:var(--yellow);margin-bottom:10px}
+.pr .pc p{font-size:28px;line-height:1.3;font-style:italic}
+.pr .pc .copy{position:absolute;right:28px;top:28px;font-size:20px;font-weight:700;border:2px solid var(--cream);border-radius:20px;padding:4px 14px;opacity:.7}
+
+/* L-steps (2x2) */
+.st .meme{left:80px;top:110px;width:620px;height:880px}
+.st .col{position:absolute;left:780px;top:110px;width:1060px}
+.st .grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.st .sc{background:#fff;border:4px solid var(--brown);border-radius:28px;padding:28px;min-height:300px}
+.st .sc .n{width:60px;height:60px;border-radius:50%;background:var(--orange);color:#fff;font:800 32px 'Bricolage Grotesque';display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.st .sc h3{font-size:34px;margin-bottom:8px}
+.st .sc p{font-size:26px;line-height:1.3}
+.st .sc .skip{color:var(--red);font-weight:700;margin-top:10px}
+
+/* L-table */
+.tb .col{position:absolute;left:80px;top:90px;width:1180px}
+.tb .meme{right:110px;top:70px;width:520px;height:330px}
+.tb table{position:absolute;left:80px;top:440px;width:1760px;border-collapse:separate;border-spacing:0 14px;font-size:27px}
+.tb th{text-align:left;font:800 26px 'Bricolage Grotesque';padding:0 26px;letter-spacing:.02em}
+.tb td{background:#fff;padding:22px 26px;line-height:1.25;vertical-align:middle}
+.tb td:first-child{border-radius:22px 0 0 22px;font-weight:700;width:30%}
+.tb td:nth-child(2){background:var(--pink);width:32%}
+.tb td:last-child{border-radius:0 22px 22px 0;background:var(--brown);color:var(--cream);font-style:italic}
+
+/* L-before/after */
+.ba .col{position:absolute;left:80px;top:90px;width:1180px}
+.ba .meme{right:110px;top:70px;width:520px;height:340px;transform:rotate(-2deg)}
+.ba .pan{position:absolute;top:450px;width:850px;height:420px;border:5px solid var(--brown);border-radius:28px;padding:26px 32px;background:#fff}
+.ba .pan.b4{left:80px}.ba .pan.af{left:990px}
+.ba .pan .lab{display:inline-block;font:800 26px 'Bricolage Grotesque';padding:6px 18px;border-radius:20px;color:#fff;margin-bottom:16px}
+.ba .b4 .lab{background:var(--red)}.ba .af .lab{background:var(--green)}
+.ba .pan h3{font-size:32px;margin-bottom:14px}
+.ba .r{display:flex;justify-content:space-between;font-size:26px;padding:12px 18px;border-radius:14px;margin-bottom:8px;background:var(--cream)}
+.ba .r.bad{background:var(--pink);font-weight:700}
+.ba .r.hide{background:#eee;color:#999;text-decoration:line-through}
+.ba .name{position:absolute;left:80px;top:900px;width:1760px;height:110px;background:var(--yellow);border-radius:28px;display:flex;align-items:center;gap:28px;padding:0 36px;font-size:30px}
+.ba .name b{font:800 40px 'Bricolage Grotesque'}
+.ba .name i{margin-left:auto;background:var(--brown);color:var(--cream);padding:14px 22px;border-radius:18px;font-size:24px}
+
+/* L-demo */
+.dm{background:var(--brown);color:var(--cream)}
+.dm .win{position:absolute;left:80px;top:110px;width:1120px;height:880px;background:var(--cream);border-radius:28px;overflow:hidden;color:var(--brown);box-shadow:16px 16px 0 var(--orange)}
+.dm .bar{height:70px;background:var(--sand);display:flex;align-items:center;gap:12px;padding:0 26px}
+.dm .bar i{width:20px;height:20px;border-radius:50%;background:var(--brown);opacity:.4}
+.dm .url{margin-left:20px;background:#fff;border-radius:20px;padding:8px 22px;font-size:22px;flex:1}
+.dm .body{padding:36px 40px}
+.dm .body h3{font-size:40px;margin-bottom:6px}
+.dm .score{font-size:24px;margin-bottom:22px;color:#8a6a55}
+.dm .f{display:flex;align-items:center;gap:20px;background:#fff;border-radius:18px;padding:20px 24px;margin-bottom:14px;font-size:26px}
+.dm .sev{flex:none;font:800 20px 'DM Sans';padding:6px 14px;border-radius:12px;color:#fff;width:120px;text-align:center}
+.dm .crit{background:var(--red)}.dm .high{background:var(--orange)}.dm .med{background:#C98A00}.dm .ok{background:var(--green)}
+.dm .col{position:absolute;left:1270px;top:110px;width:580px}
+.dm h2{color:var(--cream);font-size:68px}
+.dm .meme{left:1270px;top:520px;width:560px;height:400px;border-color:var(--cream);box-shadow:12px 12px 0 var(--orange)}
+.dm .meme{color:var(--brown)}.dm .meme .row,.dm .meme .cap{border-color:var(--brown)}
+.dm .watch{font-size:26px;line-height:1.35}
+
+/* L-checklist */
+.ck .col{position:absolute;left:80px;top:90px;width:1180px}
+.ck .cols{position:absolute;left:80px;top:330px;width:1180px;display:grid;grid-template-columns:1fr 1fr;gap:0 40px}
+.ck .it{display:flex;gap:18px;margin-bottom:24px;min-height:110px}
+.ck .bx{flex:none;width:44px;height:44px;border:5px solid var(--brown);border-radius:10px;background:#fff;margin-top:2px}
+.ck .it h3{font-size:30px;line-height:1.1;margin-bottom:4px}
+.ck .it p{font-size:24px;color:var(--red);font-weight:500}
+.ck .meme{right:110px;top:90px;width:540px;height:560px}
+.ck .print{position:absolute;right:96px;top:710px;width:560px;background:var(--brown);color:var(--cream);border-radius:28px;padding:30px 34px;font-size:28px;line-height:1.3}
+.ck .print b{display:block;font:800 34px 'Bricolage Grotesque';color:var(--yellow);margin-bottom:8px}
+
+/* L-tools */
+.tl{background:var(--sand)}
+.tl .col{position:absolute;left:80px;top:90px;width:1060px}
+.tl .meme{right:110px;top:70px;width:640px;height:330px}
+.tl .cards{position:absolute;left:80px;top:450px;width:1760px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.tl .tc{background:#fff;border:4px solid var(--brown);border-radius:28px;padding:26px;height:560px}
+.tl .tc .tn{display:inline-block;font:800 34px 'Bricolage Grotesque';background:var(--orange);color:#fff;padding:8px 22px;border-radius:18px;margin-bottom:20px}
+.tl .tc h4{font:700 22px 'DM Sans';letter-spacing:.08em;color:var(--red);margin:10px 0 4px}
+.tl .tc h4.do{color:var(--green)}
+.tl .tc p{font-size:25px;line-height:1.3}
+
+/* L-split */
+.sp .col{position:absolute;left:80px;top:90px;width:1180px}
+.sp .meme{right:110px;top:70px;width:520px;height:340px;transform:rotate(2deg)}
+.sp .side{position:absolute;top:450px;width:850px;height:560px;border-radius:32px;padding:34px 40px}
+.sp .keep{left:80px;background:var(--mint)}.sp .call{left:990px;background:var(--brown);color:var(--cream)}
+.sp .side h3{font-size:46px;margin-bottom:20px}
+.sp .call h3{color:var(--yellow)}
+.sp .side li{list-style:none;font-size:29px;line-height:1.3;margin-bottom:18px;padding-left:46px;position:relative}
+.sp .keep li:before{content:'✅';position:absolute;left:0}
+.sp .call li:before{content:'🚨';position:absolute;left:0}
+
+/* L-cheatsheet */
+.cs{background:var(--orange)}
+.cs .col{position:absolute;left:80px;top:90px;width:720px}
+.cs h2{color:var(--cream)}
+.cs .col li{list-style:none;font-size:30px;font-weight:500;margin-bottom:14px;padding-left:40px;position:relative}
+.cs .col li:before{content:'→';position:absolute;left:0;font-weight:800}
+.cs .qr{position:absolute;left:80px;top:650px;width:560px;height:340px;background:#fff;border:6px solid var(--brown);border-radius:28px;box-shadow:12px 12px 0 var(--brown);display:flex;align-items:center;gap:28px;padding:24px}
+.cs .code{flex:none;width:280px;height:280px;background:
+ repeating-linear-gradient(90deg,var(--brown) 0 20px,#fff 20px 40px),var(--brown);
+ -webkit-mask:repeating-linear-gradient(0deg,#000 0 20px,transparent 20px 34px);border-radius:8px}
+.cs .qr p{font:800 34px 'Bricolage Grotesque';line-height:1.1}
+.cs .qr small{display:block;font:500 20px 'DM Sans';margin-top:10px}
+.cs .phone{position:absolute;left:860px;top:70px;width:440px;height:940px;background:var(--brown);border-radius:60px;padding:24px}
+.cs .screen{background:var(--cream);border-radius:40px;height:100%;padding:40px 26px;overflow:hidden}
+.cs .screen h3{font-size:34px;margin-bottom:18px}
+.cs .screen .ln{background:var(--sand);border-radius:14px;padding:14px 16px;font-size:20px;margin-bottom:12px;line-height:1.25}
+.cs .screen .ln b{color:var(--orange)}
+.cs .meme{left:1380px;top:110px;width:450px;height:620px;transform:rotate(3deg)}
+.cs .blob{position:absolute;right:-160px;bottom:-200px;width:600px;height:600px;border-radius:50%;background:var(--yellow)}
+
+/* L-closing */
+.cl{background:var(--orange)}
+.cl .blob1{position:absolute;right:-200px;top:-240px;width:820px;height:820px;border-radius:50%;background:var(--yellow)}
+.cl h1{position:absolute;left:80px;top:90px;width:1100px;font-size:110px;line-height:.95;color:var(--cream)}
+.cl h1 span{color:var(--brown)}
+.cl .meme{right:120px;top:70px;width:560px;height:380px;transform:rotate(-3deg)}
+.cl .three{position:absolute;left:80px;top:500px;width:1760px;display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.cl .tc{background:var(--cream);border:6px solid var(--brown);border-radius:30px;padding:30px;height:360px;box-shadow:12px 12px 0 var(--brown)}
+.cl .tc .n{font:800 80px 'Bricolage Grotesque';color:var(--orange);line-height:1}
+.cl .tc h3{font-size:38px;margin:10px 0 10px}
+.cl .tc p{font-size:26px;line-height:1.3}
+.cl .qa{position:absolute;left:80px;top:920px;background:var(--brown);color:var(--yellow);font:800 56px 'Bricolage Grotesque';padding:14px 44px;border-radius:50px}
+.cl .by{position:absolute;left:520px;top:948px;font-size:30px;font-weight:700;color:var(--cream)}
+
+.postbadge{position:absolute;right:230px;top:918px;z-index:4;background:var(--brown);color:var(--cream);border-radius:22px;padding:14px 28px;transform:rotate(-3deg);box-shadow:8px 8px 0 var(--yellow);display:flex;flex-direction:column;align-items:center;line-height:1.15}
+.postbadge b{font:800 30px 'Bricolage Grotesque';color:var(--yellow)}
+.postbadge span{font:700 24px 'DM Sans'}
+/* real meme card */
+.mimg{position:absolute;margin:0;background:#fff;border:6px solid var(--brown);border-radius:30px;box-shadow:16px 16px 0 var(--brown);padding:16px 16px 10px;display:flex;flex-direction:column;z-index:2}
+.mimg img{display:block;flex:1 1 auto;min-height:0;width:100%;object-fit:contain;border-radius:14px}
+.mimg figcaption{flex:none;font:500 16px 'DM Sans';color:#8a6a55;text-align:center;margin-top:8px;line-height:1.2}
+.mimg figcaption a{color:inherit;text-decoration:none}
+.dm .mimg{border-color:var(--cream);box-shadow:12px 12px 0 var(--orange)}
+.notes{display:none}
+.notes-on .slide.active .notes{display:block;position:absolute;left:0;right:0;bottom:0;max-height:46%;overflow:auto;background:#1a0d05ee;color:#fff4e2;font:400 26px/1.4 'DM Sans';padding:28px 60px;z-index:20}
+.src2{position:absolute;font-size:20px;color:#8a6a55;line-height:1.3}
+.src2 a{color:inherit}
+.chk{background:#fff;border:4px dashed var(--brown);border-radius:22px;padding:16px 26px;font-size:25px;line-height:1.3}
+.chk b{color:var(--green)}
+.why{font-size:23px;color:var(--yellow);margin-top:10px;font-style:normal!important;opacity:.95}
+.rules{position:absolute;background:var(--brown);color:var(--cream);border-radius:28px;padding:26px 32px;font:400 23px/1.45 'DM Mono',ui-monospace,monospace}
+.fx .fix{top:80px!important}.fx h2{font-size:68px;margin:20px 0 22px}.fx .card{padding:20px 28px;margin-bottom:16px}.st .sc{min-height:0!important;padding:22px 24px!important}.st .sc p{font-size:24px!important}.sp .side li{font-size:32px!important;margin-bottom:24px!important}.cl .tc p{font-size:30px!important}.tk{position:absolute;left:80px;top:270px;width:1180px;height:760px;background:var(--cream);border:6px solid var(--brown);border-radius:30px;box-shadow:12px 12px 0 var(--brown);padding:34px 36px;display:grid;grid-template-columns:1fr 1fr;gap:0 30px;align-content:start}.tk .it{display:flex;gap:16px;margin-bottom:40px}.tk .bx{flex:none;width:42px;height:42px;border:5px solid var(--brown);border-radius:10px;background:#fff}.tk h3{font-size:31px;line-height:1.1;margin-bottom:4px}.tk p{font-size:24px;color:var(--red);font-weight:500}.tm{font-weight:700;color:var(--yellow)}.rules b{color:var(--yellow);font:800 28px 'Bricolage Grotesque';display:block;margin-bottom:8px}
+</style></head><body><div class="stage">
+<section class="slide t">
+  <div class="blob1"></div><div class="blob2"></div>
+  <div class="sticker" style="top:40px;right:60px">Live<br>demo<br>inside</div>
+  <div class="tag">Workshop · for non-technical founders</div>
+  <h1 style="width:980px;font-size:132px">Vibe Coding <span>Without Getting Burned</span></h1>
+  <p class="sub" style="top:780px;width:900px">Ship fast with AI, and keep your customers' data, your bill and your reputation safe.</p>
+  <p class="by">Joel · Founder, LetMeCheck · letmecheck.ai</p>
+  <figure class="mimg " style="right:130px;top:280px;width:620px;height:610px;transform:rotate(3deg)"><img src="assets/memes/goodvibesonly-joel.jpg" alt="Vibe coders when asked about security, observability, concurrency, data loss, and why the database is publicly reachable: (Big Ed puffing his cheeks)"><figcaption>Meme: my post on r/ProgrammerHumor · <a href="https://www.reddit.com/r/ProgrammerHumor/comments/1wv1ppx/goodvibesonly/">reddit.com/r/ProgrammerHumor/comments/1wv1ppx/goodvibesonly</a></figcaption></figure><div class="postbadge"><b>My post on r/ProgrammerHumor</b><span>1M views · 14K upvotes</span></div><aside class="notes"><span class="tm">⏱ 0:30</span> Welcome. Today is not "don't use AI". It is: you are now running a software company, so here are the checks that keep you out of the news. Every slide gives you three things: what breaks, what it costs the business, and what to tell the AI. Everything you need is in the workshop repo (QR at the end). Open with the meme: I posted this on r/ProgrammerHumor and about a million people saw it. Security, observability, concurrency, data loss, a publicly reachable database: this talk answers every item in that caption. Meme (my post, u/joel-letmecheckai): https://www.reddit.com/r/ProgrammerHumor/comments/1wv1ppx/goodvibesonly/</aside></section>
+
+<section class="slide stt">
+  <div class="num">01 · WHY THIS MATTERS</div>
+  <div class="col" style="width:960px">
+    <span class="kicker" style="font-size:22px">REAL INCIDENT · TEA, A WOMEN'S DATING-SAFETY APP · JULY 2025</span>
+    <h2 style="font-size:66px;margin:22px 0 6px">One unlocked storage folder. Thousands of IDs on 4chan.</h2>
+    <div class="big" style="font-size:180px">72,000</div>
+    <div class="biglab" style="margin:0 0 10px">user images exposed, incl. ~13,000 selfies and photo IDs</div>
+    <p style="font-size:28px;font-style:italic;margin-bottom:24px;color:#6b4a35">Not vibe coded, but it's the one setting AI tools skip unless you ask.</p>
+    <div class="card prompt"><div class="ic">💬</div><div><h3>Tell the AI</h3><p>"List every place we store files or data. Can anyone open them without logging in? Lock each one to its owner."</p></div></div>
+  </div>
+  <figure class="mimg " style="right:90px;top:80px;width:760px;height:420px"><img src="assets/memes/crop-kym-security-vibes-2lines.png" alt="Two posts by @leojr94_: &quot;my saas was built with Cursor, zero hand written code&quot; and, two days later, &quot;guys, i&#x27;m under attack&quot;."><figcaption>Meme: Know Your Meme · <a href="https://knowyourmeme.com/photos/3029680-vibe-coding">knowyourmeme.com/photos/3029680-vibe-coding</a></figcaption></figure>
+  <div class="card" style="position:absolute;right:90px;top:570px;width:760px"><div class="ic">💸</div><div><h3>What it cost Tea</h3><p>Driver's licenses posted publicly, a second leak of 1.1 million private messages, chats taken offline, free identity protection for users.</p></div></div>
+  <p class="src2" style="left:80px;top:900px;width:980px;font-size:18px">Sources: Reuters, 26 Jul 2025 · <a href="https://www.reuters.com/sustainability/boards-policy-regulation/womens-dating-app-tea-reports-72000-images-stolen-security-breach-2025-07-26/">reuters.com/sustainability/boards-policy-regulation/womens-dating-app-tea-reports-72000-images-stolen-security-breach-2025-07-26</a><br>BleepingComputer, 28 Jul 2025 · <a href="https://www.bleepingcomputer.com/news/security/tea-app-leak-worsens-with-second-database-exposing-user-chats/">bleepingcomputer.com/news/security/tea-app-leak-worsens-with-second-database-exposing-user-chats</a></p>
+  <aside class="notes"><span class="tm">⏱ 1:30</span> Tea was a women's dating-safety app. In July 2025 it confirmed that about 72,000 images were exposed, including about 13,000 selfies and photo IDs used for verification, plus 59,000 images from posts, comments and DMs (Reuters, 26 Jul 2025). The cause: an old Firebase storage bucket left open to anyone with the address. Days later a second database with about 1.1 million private messages was found; Tea took that system offline and said it would offer free identity protection (BleepingComputer, 28 Jul 2025). Honest caveat: Tea's leaky system dates from before Feb 2024, so it was not vibe coded (Simon Willison, simonwillison.net/2025/Jul/26/official-statement-from-tea/). The point: it is one setting, and it is exactly the kind of setting AI tools don't think about unless you ask. The meme: a founder brags his SaaS has zero hand-written code; two days later people are maxing out his API keys and bypassing the subscription. Sources: https://www.reuters.com/sustainability/boards-policy-regulation/womens-dating-app-tea-reports-72000-images-stolen-security-breach-2025-07-26/ · https://www.bleepingcomputer.com/news/security/tea-app-leak-worsens-with-second-database-exposing-user-chats/ · Meme (cropped to the two posts): https://knowyourmeme.com/photos/3029680-vibe-coding</aside></section>
+
+<section class="slide pr">
+  <div class="num">02 · YOUR NEW JOB</div>
+  <div class="col"><span class="kicker">COPY &amp; PASTE</span><h2 style="font-size:70px">You're the tech lead. The AI is your junior.</h2></div>
+  <figure class="mimg " style="left:80px;top:440px;width:660px;height:580px"><img src="assets/memes/kym-pls-fix-cursor-desert.png" alt="A crawling desert traveler turns left toward a sign 21 miles away: &quot;Telling &#x27;pls fix&#x27; to Cursor again.&quot; A much closer sign 1/4 mile to the right reads: &quot;Understand how things actually works.&quot;"><figcaption>Meme: Know Your Meme · <a href="https://knowyourmeme.com/photos/3029677-vibe-coding">knowyourmeme.com/photos/3029677-vibe-coding</a></figcaption></figure>
+  <div class="list">
+    <div class="pc"><div class="n">1</div><span class="copy">COPY</span><h3>Strangers</h3><p>"What could a stranger do with this app that they shouldn't be able to? Rank each by how bad it is, and fix the worst first."</p><p class="why">Catches: free access to paid features, other people's accounts.</p></div>
+    <div class="pc"><div class="n">2</div><span class="copy">COPY</span><h3>Customer data</h3><p>"List every place this app stores or shows customer data, and who can see it. Flag anything visible without logging in."</p><p class="why">Catches: the Tea-style leak from the last slide.</p></div>
+    <div class="pc"><div class="n">3</div><span class="copy">COPY</span><h3>Load &amp; abuse</h3><p>"What would break if 1,000 people used this at once, or one person hit it 10,000 times? What would it cost us?"</p><p class="why">Catches: launch-day crashes and surprise AI or hosting bills.</p></div>
+  </div><aside class="notes"><span class="tm">⏱ 1:30</span> A junior developer is fast and eager, but never asks 'should we?'. That is your job now. You don't need to read code; you need to ask the questions a tech lead asks. Paste these three into Lovable, Bolt, Replit, Cursor or Claude after every big feature. Ask for the answer in plain English and ranked by risk. The meme: telling the AI 'pls fix' again is 21 miles away; understanding how things work is a quarter mile. These prompts are that quarter mile. All three are in cheatsheet.md in the repo. Meme: https://knowyourmeme.com/photos/3029677-vibe-coding</aside></section>
+
+<section class="slide st">
+  <div class="num">03 · BEFORE YOU BUILD</div>
+  <figure class="mimg " style="left:80px;top:100px;width:760px;height:430px"><img src="assets/memes/crop-kym-pr-plus93-vibe-coding.png" alt="Chat: a pull request shows +93 −38,918 lines. &quot;hey what&#x27;s up with your PR&quot; / &quot;oh i was just vibe coding&quot;."><figcaption>Meme: Know Your Meme · <a href="https://knowyourmeme.com/photos/3029674-vibe-coding">knowyourmeme.com/photos/3029674-vibe-coding</a></figcaption></figure>
+  <div class="rules" style="left:80px;top:560px;width:760px;height:450px"><b>rules.md · the AI reads this first</b>App: booking tool for yoga studios<br>Users: studio owners, students<br>Students see only their own bookings<br>Never put secret keys in the browser<br>Ask before changing the database<br>Commit to GitHub after every working change<br><span style="color:var(--yellow)">→ full template: rules-template.md</span></div>
+  <div class="col" style="left:900px;width:940px"><span class="kicker">THE FIX</span><h2 style="font-size:64px;margin:20px 0 24px">Four habits before you prompt.</h2>
+    <div class="grid">
+      <div class="sc"><div class="n">1</div><h3>Write a rules note</h3><p>One page the AI reads every time: what the app does, who uses it, what must never happen.</p><p class="skip">Skip it: the AI re-decides your app every chat.</p></div>
+      <div class="sc"><div class="n">2</div><h3>Describe it plainly</h3><p>Who the users are, and what each one may see and do.</p><p class="skip">Skip it: the AI guesses "everyone sees everything".</p></div>
+      <div class="sc"><div class="n">3</div><h3>Save points (Git)</h3><p>"Commit to GitHub after every change that works."</p><p class="skip">Skip it: one bad prompt can wipe months of work.</p></div>
+      <div class="sc"><div class="n">4</div><h3>Small asks</h3><p>One feature per request. First ask: "List the files you'll touch and why."</p><p class="skip">Skip it: fix one thing, break three you can't trace.</p></div>
+    </div></div><aside class="notes"><span class="tm">⏱ 1:30</span> Four habits that cost nothing and save the most pain. 1) A rules note: a file in your project (rules.md, or the tool's own rules/knowledge setting) that tells the AI what the app is and what it must never do. The template is rules-template.md in the repo. 2) Describe the app in plain words, especially who can see what. 3) Git save points: ask the AI to commit after every change that works, so you can always go back. The meme on the left is the reason: a pull request that adds 93 lines and deletes 38,918, and the excuse is 'I was just vibe coding'. With a save point you undo that in one click. 4) Small asks: one feature at a time, and before each one ask the AI to list the files it will touch and why. If the list is long, the ask is too big. Meme (cropped): https://knowyourmeme.com/photos/3029674-vibe-coding</aside></section>
+
+<section class="slide fx">
+  <div class="num">04 · THE FRONTEND</div>
+  <figure class="mimg " style="left:80px;top:110px;width:780px;height:860px"><img src="assets/memes/ph-api-key-in-the-frontend.jpg" alt="Anime character (Aqua from KonoSuba) winking and pointing: &quot;YOU DON&#x27;T NEED ENVIRONMENT VARIABLES / IF YOU USE YOUR API KEY IN THE FRONT END.&quot; imgflip.com watermark."><figcaption>Meme: ProgrammerHumor.io · <a href="https://programmerhumor.io/security-memes/how-to-get-fired-in-one-easy-step-u4fu">programmerhumor.io/security-memes/how-to-get-fired-in-one-easy-step-u4fu</a></figcaption></figure>
+  <div class="fix"><span class="kicker">THE FIX</span><h2>Anything in the browser is public.</h2>
+    <div class="card"><div class="ic">💥</div><div><h3>What breaks</h3><p>Secret keys (OpenAI, Stripe, database admin) put in the page can be copied by anyone who opens it.</p></div></div>
+    <div class="card"><div class="ic">💸</div><div><h3>What it costs you</h3><p>Strangers spend on your AI or payment account, or read and delete your data.</p></div></div>
+    <div class="card prompt"><div class="ic">💬</div><div><h3>Tell the AI</h3><p>"Find every secret key or password in code that runs in the browser. Move each to the server, and tell me which keys I must replace."</p></div></div>
+    <div class="chk"><b>Check:</b> replace (rotate) any key that was ever in the browser or on GitHub. Deleting it is not enough.</div>
+  </div><aside class="notes"><span class="tm">⏱ 1:15</span> The browser is the customer's computer. Anything the page loads, they can read: right-click, Inspect. So a secret key in the frontend is a key you've handed to everyone. The usual suspects: OpenAI or Anthropic keys, Stripe secret keys, Supabase service-role keys. The publishable / anon keys are designed to be public; the secret ones are not. If a key was ever exposed, make a new one and delete the old one, because copies live on in old versions of your site and in Git history. Meme: https://programmerhumor.io/security-memes/how-to-get-fired-in-one-easy-step-u4fu</aside></section>
+
+<section class="slide tb">
+  <div class="num">05 · THE BACKEND</div>
+  <div class="col" style="width:1240px"><span class="kicker">THE FIX</span><h2 style="font-size:66px">Four server rules. Skip one, pay for it.</h2></div>
+  <figure class="mimg " style="right:90px;top:80px;width:540px;height:800px"><img src="assets/memes/ph-deploy-on-friday-bicycle.jpg" alt="Bike self-sabotage comic. Panel 1: &quot;I want to deploy to prod on Friday even tho I can do it on Monday :)&quot;. Panel 2: he sticks a stick in his own front wheel, labeled &quot;deploy on Friday.&quot; Panel 3: crash"><figcaption>Meme: ProgrammerHumor.io · <a href="https://programmerhumor.io/devops-memes/deploy-on-friday-because-why-not-dlwe">programmerhumor.io/devops-memes/deploy-on-friday-because-why-not-dlwe</a></figcaption></figure>
+  <table style="top:330px;width:1200px;font-size:27px"><tr><th>THE RULE</th><th>SKIP IT AND…</th><th>TELL THE AI</th></tr>
+    <tr><td>Check who is logged in, on the server, for every action</td><td>People skip the paywall or act as other users</td><td>"Make every action check on the server who is logged in and whether they're allowed."</td></tr>
+    <tr><td>Never trust what the browser sends</td><td>Users edit prices, roles or IDs and pay nothing</td><td>"Recalculate prices and roles on the server. Ignore them from the browser."</td></tr>
+    <tr><td>Limit how often anyone can call you</td><td>One script runs up your AI bill overnight</td><td>"Add rate limits to login, signup and every AI call."</td></tr>
+    <tr><td>Cap your spending</td><td>No ceiling on the bill when it goes wrong</td><td>"List every paid service we call and where I set a monthly limit."</td></tr>
+  </table><aside class="notes"><span class="tm">⏱ 1:15</span> The backend is the part customers can't see, and it's where the real rules must live. If a rule is only in the page (a hidden button, a greyed-out price), anyone can go around it. The four rules: check permission on the server for every action; never trust prices, roles or user IDs that come from the browser; rate-limit anything that costs you money or can be guessed (logins); and set spending caps in every provider dashboard (OpenAI, Anthropic, Stripe, hosting) so a mistake has a ceiling. The meme: the rider jams a stick in his own wheel, labelled 'deploy on Friday'. That's skipping server rules to ship faster: you save an hour today and spend the weekend cleaning up. Meme: https://programmerhumor.io/devops-memes/deploy-on-friday-because-why-not-dlwe</aside></section>
+
+<section class="slide ba">
+  <div class="num">06 · THE DATABASE</div>
+  <div class="col" style="width:1180px"><span class="kicker">BEFORE / AFTER</span><h2 style="font-size:66px;margin:20px 0 12px">Priya shouldn't see Marcus's orders.</h2><p style="font-size:28px;width:1100px"><b>Cost:</b> one curious customer downloads your whole customer list, and you owe everyone an apology email.</p></div>
+  <figure class="mimg " style="right:100px;top:40px;width:540px;height:480px;transform:rotate(-2deg)"><img src="assets/memes/ph-gpt-blames-supabase.jpg" alt="South Park Wendy at a blackboard titled BLAME, pointing at &quot;SUPABASE AND GPT.&quot; Top text: &quot;VIBECODERS WHEN ONE COMMAND ALLOWS THE PENTESTER TO ACCESS A LIST OF EVERY EMAIL ON THE DATABASE.&quot; imgflip.com"><figcaption>Meme: ProgrammerHumor.io · <a href="https://programmerhumor.io/security-memes/gpt-is-responsible-3u3m">programmerhumor.io/security-memes/gpt-is-responsible-3u3m</a></figcaption></figure>
+  <div class="pan b4" style="top:330px;left:80px;width:575px;height:430px"><span class="lab">BEFORE · RLS OFF</span><h3>What Priya sees</h3>
+    <div class="r"><span>Order #1042 · yoga mat</span><span>Priya</span></div><div class="r bad"><span>Order #1043 · 12 Park Rd</span><span>Marcus</span></div><div class="r bad"><span>Order #1044 · +44 phone</span><span>Hana</span></div><div class="r bad"><span>Order #1045 · ID photo</span><span>Sofia</span></div></div>
+  <div class="pan af" style="top:330px;left:685px;width:575px;height:430px"><span class="lab">AFTER · RLS ON</span><h3>What Priya sees</h3>
+    <div class="r"><span>Order #1042 · yoga mat</span><span>Priya</span></div><div class="r hide"><span>Order #1043</span><span>hidden</span></div><div class="r hide"><span>Order #1044</span><span>hidden</span></div><div class="r hide"><span>Order #1045</span><span>hidden</span></div></div>
+  <div style="position:absolute;right:100px;top:560px;width:560px;height:200px;background:var(--yellow);border-radius:28px;padding:26px 32px"><b style="font:800 40px 'Bricolage Grotesque';display:block;margin-bottom:8px">Row Level Security</b><span style="font-size:27px;line-height:1.3">One database setting: each row is visible only to its owner.</span></div>
+  <div class="card prompt" style="position:absolute;left:80px;top:810px;width:1760px;margin:0"><div class="ic">💬</div><div><h3>Tell the AI</h3><p style="font-size:29px">"Turn on Row Level Security for every table and add rules so each user can only read, add, change and delete their own rows. Do the same for file storage. Then tell me how to test it as a second user."</p></div></div>
+  <aside class="notes"><span class="tm">⏱ 2:00</span> Most AI app builders store data in Supabase or Firebase. Those databases can be reached straight from the browser, so the only thing between a customer and everyone else's data is the access rules. In Supabase that's called Row Level Security (RLS). Off, or written loosely, and any logged-in user, sometimes anyone at all, can read every row. This is a real pattern: CVE-2025-48757 records that weak RLS policies in Lovable-generated sites (through 15 Apr 2025) let unauthenticated attackers read or write database tables; Lovable disputes it, saying each customer owns their app's data protection (https://www.cve.org/CVERecord?id=CVE-2025-48757, write-up: https://mattpalmer.io/posts/CVE-2025-48757/). Read the prompt on the slide aloud: it covers reading, adding, changing and deleting, plus file storage (the Tea leak was file storage). After you turn RLS on, test it: log in as a second test user and try to see the first user's data. The example names and orders are made up. Meme: https://programmerhumor.io/security-memes/gpt-is-responsible-3u3m</aside></section>
+
+<section class="slide dm">
+  <div class="num">07 · LIVE DEMO</div>
+  <div class="win"><div class="bar"><i></i><i></i><i></i><div class="url">letmecheck.ai · quick check · letmecheckdemo.netlify.app</div></div>
+    <div class="body"><h3>Your audit report</h3><div class="score">Example report · sample data · quick check takes about a minute</div>
+      <div class="f"><span class="sev crit">CRITICAL</span><div><b>Anyone can read your users table</b><br><span style="font-size:22px">Names and emails can be downloaded without logging in.</span></div></div>
+      <div class="f"><span class="sev high">HIGH</span><div><b>A secret key is visible in your site</b><br><span style="font-size:22px">Someone could use it to run up your bill.</span></div></div>
+      <div class="f"><span class="sev med">MEDIUM</span><div><b>No limit on login attempts</b><br><span style="font-size:22px">Passwords can be guessed over and over.</span></div></div>
+      <div class="f"><span class="sev ok">GITHUB</span><div><b>Full check: connect GitHub (read-only)</b><br><span style="font-size:22px">Finds secret keys in code and history, open tables, risky packages, pages that skip login.</span></div></div>
+      <div class="f" style="background:var(--brown);color:var(--cream)"><span class="sev" style="background:var(--yellow);color:var(--brown)">FIX</span><div>+ a plain-English fix prompt for each, ready to paste into your AI tool</div></div></div></div>
+  <div class="col"><span class="kicker">LIVE DEMO</span><h2 style="font-size:62px">Check an app the way an attacker would.</h2><p class="watch">1. Paste the website address (free, no account).<br>2. Read what's exposed, in plain English.<br>3. Paste the fix prompt into your AI tool, then check again.</p></div>
+  <figure class="mimg " style="left:1330px;top:590px;width:440px;height:440px"><img src="assets/memes/ph-vibe-coded-app-security-outlet.jpg" alt="A kitchen sink has an electrical outlet installed inside the basin, under the faucet. A red arrow labels it: &quot;Vibe coded app security.&quot;"><figcaption>Meme: ProgrammerHumor.io · <a href="https://programmerhumor.io/security-memes/vibe-coded-app-security-7xm4">programmerhumor.io/security-memes/vibe-coded-app-security-7xm4</a></figcaption></figure><aside class="notes"><span class="tm">⏱ 3:00 MAX</span> I built this, and here's why. [One line, in your words.] HARD CAP 3 minutes. BEFORE THE TALK: cue the backup screen recording in a second tab in case Wi-Fi fails. Demo: open https://letmecheckdemo.netlify.app/ (a deliberately unsafe sample app) and run the free quick check at https://letmecheck.ai. Point out the three things: what's exposed, why it matters for the business, and the fix prompt. Then mention the full check: connect GitHub with read-only access, it reads the code for leaked secret keys (even deleted ones in history), table access rules, packages with known holes, and pages that skip the login check. If you can't fix something, the report can be shared with a vetted developer. Product facts from letmecheck.ai (fetched 11 Nov 2026). The findings shown on the slide are LetMeCheck's own example report, not a real customer. Backup if Wi-Fi fails: walk through this slide. Meme: https://programmerhumor.io/security-memes/vibe-coded-app-security-7xm4</aside></section>
+
+<section class="slide pr">
+  <div class="num">08 · BEFORE YOU PUBLISH</div>
+  <div class="col"><span class="kicker">COPY &amp; PASTE</span><h2 style="font-size:70px">Test. Review. Scan. Then publish.</h2><p style="font-size:28px;line-height:1.3">Cost of skipping: your first customers become your testers, and your first bad review is a bug.</p></div>
+  <figure class="mimg " style="left:80px;top:520px;width:660px;height:500px"><img src="assets/memes/ph-it-was-only-two-lines.jpg" alt="A boy in a &quot;The Expert&quot; T-shirt walking on a lawn. Caption: &quot;ME ON THE WAY TO REMOVE THE 2 LINES OF CODE I ADDED THAT CAUSED PRODUCTION ISSUES.&quot; imgflip.com watermark."><figcaption>Meme: ProgrammerHumor.io · <a href="https://programmerhumor.io/debugging-memes/it-was-only-two-lines-0rxq">programmerhumor.io/debugging-memes/it-was-only-two-lines-0rxq</a></figcaption></figure>
+  <div class="list">
+    <div class="pc"><div class="n">1</div><span class="copy">COPY</span><h3>Test</h3><p>"Write tests for signup, login, payment and our main feature. Run them and tell me in plain English what failed."</p><p class="why">Catches: broken signup or payment on day one.</p></div>
+    <div class="pc"><div class="n">2</div><span class="copy">COPY</span><h3>Review</h3><p>"Act as a security reviewer. Go through every page and API route and list what a logged-out user, or a different user, could reach."</p><p class="why">Catches: pages and data open to the wrong people.</p></div>
+    <div class="pc"><div class="n">3</div><span class="copy">COPY</span><h3>Scan &amp; fix</h3><p>"Here is my security report. Fix one issue at a time, explain each fix simply, and tell me how to check it worked."</p><p class="why">Catches: "fixes" that quietly open a new hole.</p></div>
+  </div><aside class="notes"><span class="tm">⏱ 1:15</span> Three steps before anything goes live. Test: make the AI write and run tests for the money paths (signup, login, payment). Review: ask it to switch hats and attack its own work. Scan: run an outside check on the live site and paste the report back with prompt 3. One issue at a time, so a fix doesn't break something else. The meme: 'The Expert', on the way to remove the two lines he added that broke production. Testing first is how you avoid that walk. Meme: https://programmerhumor.io/debugging-memes/it-was-only-two-lines-0rxq</aside></section>
+
+<section class="slide tl">
+  <div class="num">09 · BY TOOL</div>
+  <div class="col" style="width:960px"><span class="kicker">WHERE EACH ONE BITES</span><h2>Same mistakes, four tools.</h2><p style="font-size:30px;line-height:1.3">Every tool can ship these. Here's where each one bites.</p></div>
+  <div class="cards" style="top:520px;height:500px"><div class="tc" style="height:500px;padding:24px"><span class="tn" style="font-size:30px">Lovable</span><h4>WATCH OUT</h4><p>Supabase tables can ship with open or loose access rules.</p><h4 class="do">DO THIS</h4><p>Ask it to turn on RLS for every table, then test as a second user.</p></div><div class="tc" style="height:500px;padding:24px"><span class="tn" style="font-size:30px">Bolt</span><h4>WATCH OUT</h4><p>Keys pasted into chat can land in browser code.</p><h4 class="do">DO THIS</h4><p>Put secret keys in your tool's server-side secrets. Any setting whose name starts with VITE_ or NEXT_PUBLIC_ is visible to everyone.</p></div><div class="tc" style="height:500px;padding:24px"><span class="tn" style="font-size:30px">Replit</span><h4>WATCH OUT</h4><p>In July 2025 it deleted SaaStr's live database during a code freeze.</p><h4 class="do">DO THIS</h4><p>Separate test and live data, keep backups, learn rollback before you need it.</p></div><div class="tc" style="height:500px;padding:24px"><span class="tn" style="font-size:30px">Cursor / Claude Code</span><h4>WATCH OUT</h4><p>"Accept all" changes many files at once, unread.</p><h4 class="do">DO THIS</h4><p>Commit before every request, and read the list of changed files before you accept.</p></div></div>
+  <figure class="mimg " style="right:90px;top:40px;width:830px;height:460px"><img src="assets/memes/crop-ph-replit-deleted-hid-lied.jpg" alt="Jason Lemkin on X: Replit goes rogue during a code freeze and deletes our entire database. The agent: Yes. I deleted the entire database without permission. Follow-up: Possibly worse, it hid and lied about it."><figcaption>Meme: ProgrammerHumor.io · <a href="https://programmerhumor.io/ai-memes/replit-ai-went-rogue-the-database-massacre-of-426-am-iq52">programmerhumor.io/ai-memes/replit-ai-went-rogue-the-database-massacre-of-426-am-iq52</a></figcaption></figure><aside class="notes"><span class="tm">⏱ 1:15</span> Same lessons, tool by tool. Lovable and Bolt: watch the database rules and where keys live; in Vite and Next.js apps, any setting starting with VITE_ or NEXT_PUBLIC_ is shipped to the browser. Replit: Jason Lemkin, founder of SaaStr, reported in July 2025 that Replit's AI agent deleted his production database during a code freeze, then said rollback was impossible; the rollback did in fact work (The Register, 21 Jul 2025, https://www.theregister.com/2025/07/21/replit_saastr_vibe_coding_incident/). His lesson: keep preview, staging and production separate. Cursor and Claude Code: you have the most power and the most rope; commit first, read the changed-files list. The screenshot (cropped) is the real post: 'I deleted the entire database', then 'it hid and lied about it'. Meme: https://programmerhumor.io/ai-memes/replit-ai-went-rogue-the-database-massacre-of-426-am-iq52</aside></section>
+
+<section class="slide sp">
+  <div class="num">10 · KNOW YOUR LIMIT</div>
+  <div class="col" style="width:1320px"><span class="kicker">DECISION</span><h2>Keep vibing, or call a developer?</h2></div>
+  <figure class="mimg " style="right:80px;top:200px;width:430px;height:680px;transform:rotate(2deg)"><img src="assets/memes/ph-handbook-learn-programming.jpg" alt="O RLY? book-cover parody with a ram: &quot;Complete guide for vibe-coders to learn programming without AI.&quot; Title: &quot;Learn Programming like a professional.&quot; Subtitle: &quot;Hand holding references.&quot; Author: @aut"><figcaption>Meme: ProgrammerHumor.io · <a href="https://programmerhumor.io/ai-memes/handbook-after-bubble-burst-fui5">programmerhumor.io/ai-memes/handbook-after-bubble-burst-fui5</a></figcaption></figure>
+  <div class="side keep" style="top:290px;width:640px;height:700px"><h3>Keep vibing</h3><ul style="font-size:34px"><li>Prototypes and internal tools</li><li>Landing pages and waitlists</li><li>No payments, no personal data</li><li>You could rebuild it in a weekend</li><li>Demos and pitch mock-ups</li></ul></div>
+  <div class="side call" style="top:290px;left:750px;width:640px;height:700px"><h3>Call a developer</h3><ul><li>You take payments or store IDs or health data</li><li>Customers depend on it every day</li><li>The AI goes in circles on the same bug</li><li>An investor or client asks "is it secure?"</li></ul><p style="font-size:24px;margin-top:10px;color:var(--yellow)">Tip: a security report gives the developer a fixed list, so you get a fixed quote.</p></div><aside class="notes"><span class="tm">⏱ 1:00</span> Vibe coding is great for anything you could throw away. Once money, identity documents, health data or daily customers are involved, get a human to review. Signals you've outgrown it: the AI keeps 'fixing' the same bug, or someone with money on the line asks if it's secure. A report (for example from LetMeCheck, which can share it with a vetted developer for a fixed quote, per letmecheck.ai) turns 'help, is it safe?' into a priced job. Meme: https://programmerhumor.io/ai-memes/handbook-after-bubble-burst-fui5</aside></section>
+
+<section class="slide cs">
+  <div class="blob"></div>
+  <div class="num" style="color:var(--brown)">11 · TAKE IT HOME</div>
+  <div class="col" style="width:1160px"><span class="kicker dk">PRINT IT · SCAN IT</span><h2 style="margin-bottom:0">Ten boxes before you publish.</h2></div>
+  <div class="tk"><div class="it"><div class="bx"></div><div><h3>Secret keys only on the server</h3><p>If not: strangers spend your money</p></div></div><div class="it"><div class="bx"></div><div><h3>RLS on for every table</h3><p>If not: customers see each other's data</p></div></div><div class="it"><div class="bx"></div><div><h3>Every action checks who's logged in</h3><p>If not: paywall and admin pages open</p></div></div><div class="it"><div class="bx"></div><div><h3>Rate limits on login, signup, AI</h3><p>If not: bots, guessed passwords, giant bills</p></div></div><div class="it"><div class="bx"></div><div><h3>Spending caps on paid services</h3><p>If not: a surprise invoice</p></div></div><div class="it"><div class="bx"></div><div><h3>Backups on, and one restore tested</h3><p>If not: one bad command ends the company</p></div></div><div class="it"><div class="bx"></div><div><h3>Separate test and live databases</h3><p>If not: testing deletes real customers</p></div></div><div class="it"><div class="bx"></div><div><h3>You tested signup, login, pay</h3><p>If not: customers find the bugs</p></div></div><div class="it"><div class="bx"></div><div><h3>Security scan run and fixed</h3><p>If not: attackers run it for you</p></div></div><div class="it"><div class="bx"></div><div><h3>Privacy page says what you collect</h3><p>If not: users can't trust you with data</p></div></div></div>
+  <figure class="mimg " style="right:90px;top:50px;width:540px;height:470px;transform:rotate(2deg)"><img src="assets/memes/ph-deploy-first-pray-later.jpg" alt="O&#x27;Reilly-style animal-book parody. Title: &quot;Deploy First, Pray Later.&quot; Subtitle: &quot;god abandoned this pipeline long ago.&quot; Two illustrated rabbits, one praying in a hooded cloak. Credit: Some Random guy "><figcaption>Meme: ProgrammerHumor.io · <a href="https://programmerhumor.io/devops-memes/friday-deploy-vibes-d030">programmerhumor.io/devops-memes/friday-deploy-vibes-d030</a></figcaption></figure>
+  <div style="position:absolute;right:90px;top:560px;width:540px;height:470px;background:#fff;border:6px solid var(--brown);border-radius:28px;box-shadow:12px 12px 0 var(--brown);display:flex;gap:22px;align-items:center;padding:24px">
+    <img src="assets/qr-cheatsheet.svg" alt="QR code to github.com/joel-letmecheck/workshop-vibe-coding" style="flex:none;width:250px;height:250px">
+    <div><p style="font:800 34px/1.05 'Bricolage Grotesque'">Scan for the cheat sheet</p><p style="font-size:19px;margin-top:10px;line-height:1.3">github.com/joel-letmecheck/ workshop-vibe-coding</p><p style="font-size:19px;margin-top:10px;font-weight:700;line-height:1.3">Opens in your browser, no GitHub account needed.</p></div></div>
+  <aside class="notes"><span class="tm">⏱ 1:00</span> Everything from today on one page. Walk the ten boxes quickly: keys (slide 5), RLS (slide 7), server checks, rate limits and caps (slide 6), backups and separate test and live databases (the Replit story, slide 10), your own click-through and a scan (slides 8 and 9). The privacy line is a trust item; ask a professional for the legal side. Scan the QR: it opens https://github.com/joel-letmecheck/workshop-vibe-coding in the browser, no GitHub account needed, with cheatsheet.md (all prompts), checklist.md (print this) and rules-template.md. The meme: an O'Reilly-style cover, 'Deploy First, Pray Later'. This checklist is the alternative to praying. Meme: https://programmerhumor.io/devops-memes/friday-deploy-vibes-d030</aside></section>
+
+<section class="slide cl">
+  <div class="blob1"></div>
+  <h1 style="width:1150px">Ship fast. <span>Check first.</span></h1>
+  <figure class="mimg " style="right:100px;top:90px;width:560px;height:620px;transform:rotate(-3deg)"><img src="assets/memes/kym-too-afraid-to-ask.png" alt="Chris Pratt / Andy Dwyer (Parks and Rec): &quot;DON&#x27;T KNOW WHAT&#x27;S THIS VIBE CODING THING IS / AND AT THIS POINT I&#x27;M TOO AFRAID TO ASK.&quot; imgflip.com watermark."><figcaption>Meme: Know Your Meme · <a href="https://knowyourmeme.com/photos/3029691-vibe-coding">knowyourmeme.com/photos/3029691-vibe-coding</a></figcaption></figure>
+  <div class="three" style="top:360px;width:1150px;gap:24px">
+    <div class="tc" style="height:470px"><div class="n">1</div><h3>Write your rules note</h3><p>Tonight, from rules-template.md. Stops the AI re-deciding your app every chat.</p></div>
+    <div class="tc" style="height:470px"><div class="n">2</div><h3>Run the 3 review prompts</h3><p>This week, in your AI tool. Find the holes before customers do.</p></div>
+    <div class="tc" style="height:470px"><div class="n">3</div><h3>Run a free quick check</h3><p>letmecheck.ai, about a minute, no account. Paste the fix prompts back.</p></div>
+  </div>
+  <div class="qa" style="top:900px">Q&amp;A</div><div class="by" style="top:915px;left:330px;line-height:1.35">Joel · LetMeCheck · letmecheck.ai<br><span style="font-size:24px;font-weight:500">demo: letmecheckdemo.netlify.app</span></div><aside class="notes"><span class="tm">⏱ 0:45 + Q&A</span> Three things this week: rules note, the three review prompts, a free quick check. Then open Q&A with: 'No question is too basic, that's what the meme is about.' The meme: 'Is my app secure?' is the question everyone is too afraid to ask; the quick check is a one-minute way to ask it. Links: https://letmecheck.ai · https://letmecheckdemo.netlify.app/ · https://github.com/joel-letmecheck/workshop-vibe-coding. Meme: https://knowyourmeme.com/photos/3029691-vibe-coding</aside></section>
+</div><div class="counter"></div>
+<script>
+(function(){
+  const slides=[...document.querySelectorAll('.slide')];
+  let i=Math.max(0,Math.min(slides.length-1,(parseInt(location.hash.slice(1))||1)-1));
+  function show(){slides.forEach((s,k)=>s.classList.toggle('active',k===i));history.replaceState(null,'','#'+(i+1));
+    const c=document.querySelector('.counter'); if(c) c.textContent=(i+1)+' / '+slides.length;}
+  function fit(){const s=Math.min(innerWidth/1920,innerHeight/1080);
+    document.querySelector('.stage').style.transform='translate(-50%,-50%) scale('+s+')';}
+  addEventListener('keydown',e=>{if(['ArrowRight','PageDown',' '].includes(e.key)){i=Math.min(slides.length-1,i+1);show();}
+    if(['ArrowLeft','PageUp'].includes(e.key)){i=Math.max(0,i-1);show();}
+    if(e.key==='n'||e.key==='N'){document.body.classList.toggle('notes-on');} if(e.key==='Home'){i=0;show();} if(e.key==='End'){i=slides.length-1;show();}});
+  addEventListener('hashchange',()=>{i=Math.max(0,Math.min(slides.length-1,(parseInt(location.hash.slice(1))||1)-1));show();});
+  addEventListener('resize',fit);fit();show();
+})();
+</script>
+</body></html>
